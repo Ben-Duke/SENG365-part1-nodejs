@@ -1,0 +1,49 @@
+const db  = require('../../config/db');
+
+exports.getAll = function(done){
+    db.getPool().query('SELECT * FROM User', function (err, rows){
+
+        if(err) return done({"ERROR" : "Error selecting"});
+
+        return done(rows);
+    })
+};
+
+exports.getOne = function (userId, done){
+    console.log("looking");
+    db.getPool().query('SELECT * FROM User WHERE user_Id = ?', userId, function(err, rows){
+
+        if(err) return done(err);
+        done(rows);
+    })
+};
+
+exports.insert = function(username, done){
+    let values = [username];
+
+    db.getPool().query('INSERT INTO User (username) VALUES ?', values, function (err, result) {
+
+        if(err) return done(err) ;
+
+        done(result);
+
+    })
+};
+
+exports.alter = function(firstname, lastname, password, id, done){
+    console.log("Got here");
+    console.log(firstname);
+    let values = [firstname, lastname, password, id ];
+    db.getPool().query('UPDATE User SET given_name = ?, family_name = ?, password = ? WHERE user_Id = ?', values, function (err,result) {
+        if(err) return done(err) ;
+        console.log("Ran query");
+        done(result);
+    })
+};
+
+exports.remove = function(id, done){
+    db.getPool().query('DELETE FROM User WHERE user_Id = ?', id, function(err, rows){
+        if(err) return done(err);
+        done(rows);
+    })
+};
