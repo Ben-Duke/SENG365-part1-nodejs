@@ -4,7 +4,7 @@ module.exports = function (app) {
 
 
 
-    app.route('/api/v1//users')
+    app.route('/api/v1/users')
         .get(users.list)
         .post(users.create);
 
