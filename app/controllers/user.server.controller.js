@@ -29,12 +29,21 @@ exports.create = function (req, res) {
             valid = false;
         }
     }
+
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    //console.log(re.test(String(values[0][1]).toLowerCase()));
+    if (re.test(String(values[0][1]).toLowerCase())) {
+        valid = false;
+    };
+
+
     if (valid == true) {
         User.insert(values, function (result) {
 
-            console.log();
+            //console.log();
             if (result.code) {
                 if (result.code == "ER_DUP_ENTRY") {
+                    //console.log(result);
                     res.status(400);
                     res.send("Bad Request");
                 }
@@ -44,6 +53,10 @@ exports.create = function (req, res) {
             }
 
         });
+    }
+    else {
+        res.status(400);
+        res.send("Bad Request");
     }
 
 };
