@@ -31,12 +31,19 @@ exports.create = function (req, res) {
     }
     if (valid == true) {
         User.insert(values, function (result) {
-            res.status(201);
-            res.json("Created");
+
+            console.log();
+            if (result.code) {
+                if (result.code == "ER_DUP_ENTRY") {
+                    res.status(400);
+                    res.send("Bad Request");
+                }
+            } else {
+                res.status(201);
+                res.json("Created");
+            }
+
         });
-    } else {
-        res.status(400);
-        res.send("Bad Request");
     }
 
 };
