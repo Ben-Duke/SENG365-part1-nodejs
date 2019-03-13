@@ -31,7 +31,8 @@ exports.create = function (req, res) {
     }
     if (valid == true) {
         User.insert(values, function (result) {
-            res.json(result);
+            res.status(201);
+            res.json("Created");
         });
     } else {
         res.status(400);
