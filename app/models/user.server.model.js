@@ -1,5 +1,6 @@
 const db = require('../../config/db');
 
+
 exports.getAll = function (done) {
     db.getPool().query('SELECT * FROM User', function (err, rows) {
 

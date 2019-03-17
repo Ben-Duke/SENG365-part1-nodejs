@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const allowCrossOriginRequests = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');

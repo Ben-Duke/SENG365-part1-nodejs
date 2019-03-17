@@ -1,4 +1,6 @@
 const User = require('../models/user.server.model');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 exports.list = function (req, res) {
     User.getAll(function (result) {
@@ -21,33 +23,39 @@ exports.create = function (req, res) {
     let familyName = user_data['familyName'].toString();
     let password = user_data['password'].toString();
 
+
+
     let values = [
         [user, email, givenName, familyName, password]
     ];
     for (i = 0; i < values[0].length; i++) {
+        // console.log("value is " + values[0][i]);
         if (values[0][i].length == 0) {
             valid = false;
         }
+        // console.log(valid);
     }
 
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    //console.log(re.test(String(values[0][1]).toLowerCase()));
-    if (re.test(String(values[0][1]).toLowerCase())) {
+    console.log("reg check " + re.test(String(values[0][1]).toLowerCase()));
+    if (!re.test(String(values[0][1]).toLowerCase())) {
         valid = false;
     };
 
-
+    // console.log("checking valid");
+    // console.log(valid)
     if (valid == true) {
         User.insert(values, function (result) {
 
-            //console.log();
+            console.log();
             if (result.code) {
                 if (result.code == "ER_DUP_ENTRY") {
-                    //console.log(result);
+                    console.log(result);
                     res.status(400);
                     res.send("Bad Request");
                 }
             } else {
+                console.log("valid 201");
                 res.status(201);
                 res.json("Created");
             }
