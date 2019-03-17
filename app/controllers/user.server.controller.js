@@ -28,7 +28,8 @@ exports.create = function (req, res) {
     let values = [
         [user, email, givenName, familyName, password]
     ];
-    if (user != null || user.length < 1) {
+
+    if (user != null && user.length != 0) {
         for (i = 0; i < values[0].length; i++) {
             // console.log("value is " + values[0][i]);
             if (values[0][i].length == 0) {
