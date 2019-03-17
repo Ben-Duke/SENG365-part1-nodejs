@@ -28,45 +28,49 @@ exports.create = function (req, res) {
     let values = [
         [user, email, givenName, familyName, password]
     ];
-    for (i = 0; i < values[0].length; i++) {
-        // console.log("value is " + values[0][i]);
-        if (values[0][i].length == 0) {
-            valid = false;
-        }
-        // console.log(valid);
-    }
-
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    console.log("reg check " + re.test(String(values[0][1]).toLowerCase()));
-    if (!re.test(String(values[0][1]).toLowerCase())) {
-        valid = false;
-    };
-
-    // console.log("checking valid");
-    // console.log(valid)
-    if (valid == true) {
-        User.insert(values, function (result) {
-
-            console.log();
-            if (result.code) {
-                if (result.code == "ER_DUP_ENTRY") {
-                    console.log(result);
-                    res.status(400);
-                    res.send("Bad Request");
-                }
-            } else {
-                console.log("valid 201");
-                res.status(201);
-                res.json("Created");
+    if (user != null || user.length < 1) {
+        for (i = 0; i < values[0].length; i++) {
+            // console.log("value is " + values[0][i]);
+            if (values[0][i].length == 0) {
+                valid = false;
             }
+            // console.log(valid);
+        }
 
-        });
-    }
-    else {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        console.log("reg check " + re.test(String(values[0][1]).toLowerCase()));
+        if (!re.test(String(values[0][1]).toLowerCase())) {
+            valid = false;
+        };
+
+        // console.log("checking valid");
+        // console.log(valid)
+        if (valid == true) {
+            User.insert(values, function (result) {
+
+                console.log();
+                if (result.code) {
+                    if (result.code == "ER_DUP_ENTRY") {
+                        console.log(result);
+                        res.status(400);
+                        res.send("Bad Request");
+                    }
+                } else {
+                    console.log("valid 201");
+                    res.status(201);
+                    res.json("Created");
+                }
+
+            });
+        }
+        else {
+            res.status(400);
+            res.send("Bad Request");
+        }
+    } else {
         res.status(400);
         res.send("Bad Request");
     }
-
 };
 
 exports.read = function (req, res) {
