@@ -28,10 +28,16 @@ exports.create = async function (req, res) {
     if (user == null || user == "") {
         console.log("Empty");
     }
+    console.log();
+    console.log();
+    console.log();
+    console.log("***********")
     console.log("usernames is" + user);
     console.log("email is" + email);
     console.log("gname is" + givenName);
     console.log("famnames is" + familyName);
+    console.log();
+    console.log();
 
     let values = [
         [user, email, givenName, familyName, password]
@@ -83,7 +89,7 @@ exports.create = async function (req, res) {
 
 exports.read = function (req, res) {
     let id = req.params.userId;
-    console.log(id);
+    console.log("id is " + id);
     User.getOne(id, function (result) {
 
         if (result.toString() == "") {
@@ -102,7 +108,7 @@ exports.update = function (req, res) {
     let familyName = req.body.familyName;
     let password = req.body.password;
     User.alter(givenName, familyName, password, id, function (result) {
-        console.log(result);
+        //console.log(result);
         res.json(result);
     })
 };

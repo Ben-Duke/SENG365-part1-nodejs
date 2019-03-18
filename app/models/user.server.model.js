@@ -35,12 +35,10 @@ exports.insert = async function (values, done) {
 };
 
 exports.alter = function (firstname, lastname, password, id, done) {
-    console.log("Got here");
-    console.log(firstname);
+
     let values = [firstname, lastname, password, id];
     db.getPool().query('UPDATE User SET given_name = ?, family_name = ?, password = ? WHERE user_Id = ?', values, function (err, result) {
         if (err) return done(err);
-        console.log("Ran query");
         done(result);
     })
 };
