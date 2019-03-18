@@ -25,16 +25,19 @@ exports.create = async function (req, res) {
     let password = user_data['password'].toString();
 
 
-    if (user == null) {
+    if (user == null || user == "") {
         console.log("Empty");
     }
-    console.log(user);
+    console.log("usernames is" + user);
+    console.log("email is" + email);
+    console.log("gname is" + givenName);
+    console.log("famnames is" + familyName);
 
     let values = [
         [user, email, givenName, familyName, password]
     ];
 
-    if (user != null) {
+    if (user == null || user == "") {
         for (i = 0; i < values[0].length; i++) {
             // console.log("value is " + values[0][i]);
             if (values[0][i].length == 0) {
