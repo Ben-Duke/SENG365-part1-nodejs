@@ -47,27 +47,31 @@ exports.create = async function (req, res) {
         // console.log("checking valid");
         // console.log(valid)
         if (valid == true) {
-            await User.insert(values, function (result) {
+            try {
+                await User.insert(values, function (result) {
 
-                //console.log("*********" + result);
-                if (result != "error") {
-                    //console.log("valid 201");
-                    res.status(201);
-                    res.json("Created");
-                } else {
-                    //console.log("400");
-                    res.status(400);
-                    res.json("Bad request");
-                }
+                    //console.log("*********" + result);
+                    if (result != "error") {
+                        //console.log("valid 201");
+                        res.status(201);
+                        res.json("Created");
+                    } else {
+                        //console.log("400");
+                        res.status(400);
+                        res.json("Bad request");
+                    }
 
-
-            });
+                });
+            } catch (err) {
+                console.log("Error");
+            }
         }
         else {
             res.status(400);
             res.send("Bad Request");
         }
     }
+
 };
 
 exports.read = function (req, res) {
