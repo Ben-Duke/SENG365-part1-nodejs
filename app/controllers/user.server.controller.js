@@ -84,6 +84,9 @@ exports.create = async function (req, res) {
             res.status(400);
             res.send("Bad Request");
         }
+    } else {
+        res.status(400);
+        res.send("Bad Request");
     }
 };
 
