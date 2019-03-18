@@ -25,12 +25,10 @@ exports.insert = function (values, done) {
 
 
     try {
-        db.getPool()
+        const result = await db.getPool()
             .query('INSERT INTO User (username, email, given_name, family_name, password) VALUES (?)',
-                values, function (err, result) {
-                    if (err) return done("error");
-                    done(result);
-                })
+                values);
+        done(result);
     }
     catch (err) {
         done("error")
