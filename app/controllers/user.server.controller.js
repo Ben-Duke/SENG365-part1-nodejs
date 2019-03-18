@@ -37,7 +37,7 @@ exports.create = async function (req, res) {
         [user, email, givenName, familyName, password]
     ];
 
-    if (user == null || user == "") {
+    if (user != null && user != "") {
         for (i = 0; i < values[0].length; i++) {
             // console.log("value is " + values[0][i]);
             if (values[0][i].length == 0) {
