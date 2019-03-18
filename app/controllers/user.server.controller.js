@@ -17,19 +17,24 @@ exports.create = async function (req, res) {
         "password": req.body.password
     };
     var valid = true;
-    let user = user_data['username'].toString();
+    let user = user_data['username'];
+    //.toString();
     let email = user_data['email'].toString();
     let givenName = user_data['givenName'].toString();
     let familyName = user_data['familyName'].toString();
     let password = user_data['password'].toString();
 
 
+    if (user == null) {
+        console.log("Empty");
+    }
+    console.log(user);
 
     let values = [
         [user, email, givenName, familyName, password]
     ];
 
-    if (user != null && user.length != 0) {
+    if (user != null) {
         for (i = 0; i < values[0].length; i++) {
             // console.log("value is " + values[0][i]);
             if (values[0][i].length == 0) {
@@ -71,7 +76,6 @@ exports.create = async function (req, res) {
             res.send("Bad Request");
         }
     }
-
 };
 
 exports.read = function (req, res) {
