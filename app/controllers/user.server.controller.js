@@ -52,11 +52,11 @@ exports.create = async function (req, res) {
             // console.log(valid);
         }
 
-        // var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        // console.log("reg check " + re.test(String(values[0][1]).toLowerCase()));
-        // if (!re.test(String(values[0][1]).toLowerCase())) {
-        //     valid = false;
-        // };
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        console.log("reg check " + re.test(String(values[0][1]).toLowerCase()));
+        if (!re.test(String(values[0][1]).toLowerCase())) {
+            valid = false;
+        };
 
         // console.log("checking valid");
         // console.log(valid)
