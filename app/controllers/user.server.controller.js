@@ -70,7 +70,7 @@ exports.create = async function (req, res) {
                         id = result.insertId;
                         console.log("valid 201");
                         res.status(201);
-                        res.json({ userid: id });
+                        res.json({ userId: id });
                         //Should be the id look at swagger api 
                         //console.log(result);
 
