@@ -27,6 +27,7 @@ exports.insert = async function (values, done) {
         const result = await db.getPool()
             .query('INSERT INTO User (username, email, given_name, family_name, password) VALUES (?)',
                 values);
+
         done(result);
     }
     catch (err) {

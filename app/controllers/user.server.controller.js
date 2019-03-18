@@ -1,5 +1,6 @@
 const User = require('../models/user.server.model');
 const bcrypt = require('bcrypt');
+const emailvalidator = require('email-validator');
 const saltRounds = 10;
 
 exports.list = function (req, res) {
@@ -45,30 +46,36 @@ exports.create = async function (req, res) {
 
     if (user != null && user != "") {
         for (i = 0; i < values[0].length; i++) {
-            // console.log("value is " + values[0][i]);
+            console.log("value is " + values[0][i]);
+            console.log("and valid is " + !values[0][i].length == 0);
             if (values[0][i].length == 0) {
                 valid = false;
             }
             // console.log(valid);
         }
 
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        console.log("reg check " + re.test(String(values[0][1]).toLowerCase()));
-        if (!re.test(String(values[0][1]).toLowerCase())) {
+
+        if (!emailvalidator.validate(email)) {
             valid = false;
         };
 
         // console.log("checking valid");
-        // console.log(valid)
+        console.log("valid is " + valid)
         if (valid == true) {
             try {
                 await User.insert(values, function (result) {
 
                     //console.log("*********" + result);
                     if (result != "error") {
-                        //console.log("valid 201");
+                        id = result.insertId;
+                        console.log("valid 201");
                         res.status(201);
-                        res.json("Created");
+                        res.json({ userid: id });
+                        //Should be the id look at swagger api 
+                        //console.log(result);
+
+                        console.log(id);
+
                     } else {
                         //console.log("400");
                         res.status(400);
