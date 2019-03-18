@@ -11,6 +11,7 @@ exports.getAll = function (done) {
 };
 
 exports.getOne = function (userId, done) {
+    console.log("calling getOne");
     console.log("looking");
     db.getPool().query('SELECT * FROM User WHERE user_Id = ?', userId, function (err, rows) {
 
@@ -21,7 +22,7 @@ exports.getOne = function (userId, done) {
 
 exports.insert = async function (values, done) {
 
-
+    console.log("calling Insert");
     try {
         const result = await db.getPool()
             .query('INSERT INTO User (username, email, given_name, family_name, password) VALUES (?)',

@@ -83,6 +83,7 @@ exports.create = async function (req, res) {
 
 exports.read = function (req, res) {
     let id = req.params.userId;
+    console.log(id);
     User.getOne(id, function (result) {
 
         if (result.toString() == "") {
