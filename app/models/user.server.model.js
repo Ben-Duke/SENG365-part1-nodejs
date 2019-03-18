@@ -13,7 +13,7 @@ exports.getAll = function (done) {
 exports.getOne = function (userId, done) {
     console.log("calling getOne");
     console.log("looking");
-    db.getPool().query('SELECT * FROM User WHERE user_Id = ?', userId, function (err, rows) {
+    db.getPool().query('SELECT * FROM User WHERE user_id = ?', userId, function (err, rows) {
 
         if (err) return done(err);
         done(rows);
