@@ -8,7 +8,7 @@ exports.list = function (req, res) {
     })
 };
 
-exports.create = function (req, res) {
+exports.create = async function (req, res) {
     let user_data = {
         "username": req.body.username,
         "email": req.body.email,
@@ -47,7 +47,7 @@ exports.create = function (req, res) {
         // console.log("checking valid");
         // console.log(valid)
         if (valid == true) {
-            User.insert(values, function (result) {
+            await User.insert(values, function (result) {
 
                 //console.log("*********" + result);
                 if (result != "error") {

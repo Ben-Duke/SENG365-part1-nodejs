@@ -19,9 +19,7 @@ exports.getOne = function (userId, done) {
     })
 };
 
-exports.insert = function (values, done) {
-
-
+exports.insert = async function (values, done) {
 
 
     try {
