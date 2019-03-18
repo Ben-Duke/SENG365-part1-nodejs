@@ -21,15 +21,20 @@ exports.getOne = function (userId, done) {
 
 exports.insert = function (values, done) {
 
-    db.getPool()
-        .query('INSERT INTO User (username, email, given_name, family_name, password) VALUES (?)',
-            values, function (err, result) {
 
-                if (err) return done(err);
 
-                done(result);
 
-            })
+    try {
+        db.getPool()
+            .query('INSERT INTO User (username, email, given_name, family_name, password) VALUES (?)',
+                values, function (err, result) {
+                    if (err) return done("error");
+                    done(result);
+                })
+    }
+    catch (err) {
+        done("error")
+    }
 };
 
 exports.alter = function (firstname, lastname, password, id, done) {

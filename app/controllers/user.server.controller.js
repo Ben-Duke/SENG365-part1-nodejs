@@ -49,18 +49,17 @@ exports.create = function (req, res) {
         if (valid == true) {
             User.insert(values, function (result) {
 
-                console.log();
-                if (result.code) {
-                    if (result.code == "ER_DUP_ENTRY") {
-                        console.log(result);
-                        res.status(400);
-                        res.send("Bad Request");
-                    }
-                } else {
-                    console.log("valid 201");
+                //console.log("*********" + result);
+                if (result != "error") {
+                    //console.log("valid 201");
                     res.status(201);
                     res.json("Created");
+                } else {
+                    //console.log("400");
+                    res.status(400);
+                    res.json("Bad request");
                 }
+
 
             });
         }
@@ -68,9 +67,6 @@ exports.create = function (req, res) {
             res.status(400);
             res.send("Bad Request");
         }
-    } else {
-        res.status(400);
-        res.send("Bad Request");
     }
 };
 
