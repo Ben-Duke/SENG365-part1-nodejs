@@ -10,6 +10,21 @@ exports.getAll = function (done) {
     })
 };
 
+exports.checkAuthUser = async function (creds, done) {
+    console.log("calling auth by id");
+    try {
+        const result = await db.getPool()
+            .query('SELECT * FROM User WHERE user_id = ? AND auth_token = ?',
+                creds);
+        //console.log("in auth " + result);
+        done(result);
+    }
+    catch (err) {
+        console.log(err.toString());
+        done("error")
+    }
+}
+
 exports.authUser = async function (creds, done) {
     console.log("calling login");
     try {

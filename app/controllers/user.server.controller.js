@@ -94,8 +94,8 @@ exports.login = async function (req, res) {
     ];
     try {
         await User.authUser(creds, function (result) {
-            console.log("result is " + result[0] + " type is " + typeof (result[0]));
-            console.log("result is " + result);
+            //console.log("result is " + result[0] + " type is " + typeof (result[0]));
+            //console.log("result is " + result);
             if (result[0] != null) {
                 console.log("gernerate authcode");
                 var token = randtoken.generate(32);
@@ -252,15 +252,49 @@ exports.read = function (req, res) {
     })
 };
 
-exports.update = function (req, res) {
+exports.update = async function (req, res) {
     let id = req.params.userId;
     let givenName = req.body.givenName;
     let familyName = req.body.familyName;
     let password = req.body.password;
-    User.alter(givenName, familyName, password, id, function (result) {
-        //console.log(result);
-        res.json(result);
-    })
+    let authToken = req.get("X-Authorization");
+    console.log(givenName + " name " + familyName + " Fam " + password + "Password");
+    if (givenName == null && familyName == null && password == null) {
+        console.log("no changes");
+        res.status(400);
+        res.send("Bad Request");
+    }
+    else {
+        //check if auth matched user
+        creds = [
+            id, authToken
+        ]
+        try {
+            const result = await User.checkAuthUser(creds, function (done) {
+
+                console.log(done);
+                console.log(done[0].auth_token);
+                if (done[0].auth_token != null) {
+                    try {
+                        User.alter(givenName, familyName, password, id, function () {
+                            //console.log(result);
+                            res.status(200);
+                            res.send("OK");
+                        })
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }
+                else {
+                    res.status(401);
+                    res.send("Unauthorized");
+                }
+            });
+        } catch (err) {
+            console.log(err.toString());
+        }
+
+    }
 };
 
 exports.delete = function (req, res) {
