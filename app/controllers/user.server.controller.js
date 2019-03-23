@@ -224,12 +224,29 @@ exports.read = function (req, res) {
     let id = req.params.userId;
     console.log("id is " + id);
     User.getOne(id, function (result) {
-
-        if (result.toString() == "") {
-            res.status(401);
+        console.log(result);
+        if (result[0] == null) {
+            res.status(404);
             res.send("Not Found");
         } else {
-            res.json(result);
+            if (result[0].auth_token != null) {
+                console.log("Return all info");
+
+                res.json({
+                    "username": result[0].username,
+                    "email": result[0].email,
+                    "givenName": result[0].given_name,
+                    "familyName": result[0].family_name
+                });
+            } else {
+                console.log("Restrict output");
+                res.json({
+                    "username": result[0].username,
+                    "givenName": result[0].given_name,
+                    "familyName": result[0].family_name
+                });
+            }
+
         }
 
     })
