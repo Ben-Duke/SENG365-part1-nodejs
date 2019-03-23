@@ -25,6 +25,30 @@ exports.authUser = async function (creds, done) {
     }
 }
 
+exports.logout = async function (authToken, done) {
+    try {
+        const request = await db.getPool().query('UPDATE User SET auth_token = NULL WHERE auth_token = ?',
+            authToken);
+        console.log(request);
+        done("Logged out");
+    }
+    catch (err) {
+        console.log("Error in exports.logout: " + err.toString());
+        done("Error");
+    }
+}
+exports.checkAuth = async function (authToken, done) {
+    try {
+        const request = await db.getPool().query('SELECT * FROM User WHERE auth_token = ?',
+            authToken);
+        done(request);
+    }
+    catch (err) {
+        console.log("Error in exports.checkAuth: " + err.toString());
+        done("Error");
+    }
+}
+
 exports.getOne = function (userId, done) {
     console.log("calling getOne");
     console.log("looking");

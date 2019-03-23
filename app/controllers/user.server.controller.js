@@ -11,6 +11,54 @@ exports.list = function (req, res) {
     })
 };
 
+exports.logOut = async function (req, res) {
+    authToken = req.get("X-Authorization");
+    console.log(authToken);
+    if (authToken != null) {
+        try {
+            await User.checkAuth(authToken, function (result) {
+                console.log(result[0]);
+                if (result[0] != null) {
+                    console.log("Going to remove token");
+                    try {
+                        console.log("Token is " + result[0].auth_token);
+                        if (result[0].auth_token != null) {
+                            User.logout(result[0].auth_token, function (done) {
+                                console.log(done);
+                                res.status(200);
+                                res.send("OK");
+                            })
+                        } else {
+                            res.status(401);
+                            res.send("Unauthorized");
+                        }
+
+                    } catch (err) {
+                        console.log(err.toString());
+                        res.status(401);
+                        res.send("Unauthorized");
+                    }
+
+
+                }
+                else {
+                    res.status(401);
+                    res.send("Unauthorized");
+                }
+            });
+
+        } catch (err) {
+            console.log(err.toString());
+            res.status(401);
+            res.send("Unauthorized");
+        }
+    } else {
+        res.status(401);
+        res.send("Unauthorized");
+    }
+
+}
+
 exports.login = async function (req, res) {
     //Todo check body has has token that is stored in the db for that user.
     let user_data = {
