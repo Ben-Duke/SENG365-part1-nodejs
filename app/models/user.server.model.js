@@ -10,6 +10,21 @@ exports.getAll = function (done) {
     })
 };
 
+exports.authUser = async function (username, done) {
+    console.log("calling login");
+    try {
+        const result = await db.getPool()
+            .query('SELECT * FROM User WHERE username = ?',
+                username);
+        console.log("in auth " + result);
+        done(result);
+    }
+    catch (err) {
+        console.log(err.toString());
+        done("error")
+    }
+}
+
 exports.getOne = function (userId, done) {
     console.log("calling getOne");
     console.log("looking");
@@ -35,6 +50,17 @@ exports.insert = async function (values, done) {
 
     }
 };
+
+exports.addAuth = async function (values) {
+    console.log("Calling update Auth");
+    try {
+        const result = await db.getPool().query('UPDATE User SET auth_token = (?) WHERE user_id = (?)', values);
+
+    } catch (err) {
+        console.log(err.toString());
+        console.log("COULDNT AUTH USER!!");
+    }
+}
 
 exports.alter = function (firstname, lastname, password, id, done) {
 

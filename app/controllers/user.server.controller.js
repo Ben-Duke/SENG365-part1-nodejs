@@ -2,11 +2,75 @@ const User = require('../models/user.server.model');
 const bcrypt = require('bcrypt');
 const emailvalidator = require('email-validator');
 const saltRounds = 10;
+const randtoken = require('rand-token');
+
 
 exports.list = function (req, res) {
     User.getAll(function (result) {
         res.json(result);
     })
+};
+
+exports.login = async function (req, res) {
+    //Todo check body has has token that is stored in the db for that user.
+    let user_data = {
+        "username": req.body.username,
+        "email": req.body.email,
+        "password": req.body.password
+    };
+
+    let user = user_data['username'];
+    if (user != null && user != "") {
+        user = user.toString();
+    } else {
+        user = "";
+    }
+
+    let email = user_data['email'];
+    if (email != null && email != "") {
+        email = email.toString();
+    } else {
+        email = "";
+    }
+
+    //let email = user_data['email'].toString();
+    let password = user_data['password'].toString();
+
+    try {
+        await User.authUser(user, function (result) {
+            console.log("result is " + result[0] + " type is " + typeof (result[0]));
+            if (result[0] != null) {
+                console.log("gernerate authcode");
+                var token = randtoken.generate(32);
+                console.log("Add auth code")
+                let values = [
+                    result[0].user_id,
+                    token
+                ]
+                try {
+                    User.addAuth(values, function () {
+                        console.log("Worked");
+                    })
+                } catch (err) {
+                    console.log("adding code failed");
+                }
+                console.log("Sending id + Auth back")
+                id = result[0].user_id;
+                res.status(200);
+                res.json({
+                    userId: id,
+                    token: token
+                });
+
+            }
+            else {
+                res.status(400);
+                res.send("Bad Request");
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 exports.create = async function (req, res) {
@@ -29,17 +93,18 @@ exports.create = async function (req, res) {
     if (user == null || user == "") {
         console.log("Empty");
     }
-    console.log();
-    console.log();
-    console.log();
-    console.log("***********")
-    console.log("usernames is" + user);
-    console.log("email is" + email);
-    console.log("gname is" + givenName);
-    console.log("famnames is" + familyName);
-    console.log();
-    console.log();
-
+    {
+        console.log();
+        console.log();
+        console.log();
+        console.log("***********")
+        console.log("usernames is" + user);
+        console.log("email is" + email);
+        console.log("gname is" + givenName);
+        console.log("famnames is" + familyName);
+        console.log();
+        console.log();
+    }
     let values = [
         [user, email, givenName, familyName, password]
     ];
