@@ -10,13 +10,13 @@ exports.getAll = function (done) {
     })
 };
 
-exports.authUser = async function (username, done) {
+exports.authUser = async function (creds, done) {
     console.log("calling login");
     try {
         const result = await db.getPool()
-            .query('SELECT * FROM User WHERE username = ?',
-                username);
-        console.log("in auth " + result);
+            .query('SELECT * FROM User WHERE (username = ? OR email = ?) AND password = ?',
+                creds);
+        //console.log("in auth " + result);
         done(result);
     }
     catch (err) {

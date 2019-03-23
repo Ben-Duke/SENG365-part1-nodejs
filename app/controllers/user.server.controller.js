@@ -33,12 +33,21 @@ exports.login = async function (req, res) {
         email = "";
     }
 
-    //let email = user_data['email'].toString();
-    let password = user_data['password'].toString();
+    let password = user_data['password'];
+    if (password != null && password != "") {
+        password = password.toString();
+    } else {
+        password = "";
+    }
 
+
+    let creds = [
+        user, email, password
+    ];
     try {
-        await User.authUser(user, function (result) {
+        await User.authUser(creds, function (result) {
             console.log("result is " + result[0] + " type is " + typeof (result[0]));
+            console.log("result is " + result);
             if (result[0] != null) {
                 console.log("gernerate authcode");
                 var token = randtoken.generate(32);
