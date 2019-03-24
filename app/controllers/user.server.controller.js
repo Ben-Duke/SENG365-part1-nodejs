@@ -24,12 +24,11 @@ exports.getPhoto = async function (req, res) {
     console.log("User id is " + userId);
     try {
         await User.getOne(userId, function (result) {
-            if (result != null) {
+            if (result[0] != null) {
                 console.log(result[0].profile_photo_filename);
                 if (result[0].profile_photo_filename != null) {
                     userProfilePicture = result[0].profile_photo_filename;
                     console.log(userProfilePicture);
-
                     res.sendFile(path.join(__dirname, '../photos', userProfilePicture));
                 } else {
                     res.status(404);
