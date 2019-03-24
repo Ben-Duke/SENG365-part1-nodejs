@@ -54,28 +54,74 @@ exports.uploadPhoto = function (req, res) {
     try {
         authToken = req.get("X-Authorization");
         filetype = req.get("Content-Type");
-        User.getOne(req.params.user_id)
+        userId = req.params.id;
+        console.log("user id is " + userId);
+        User.getOne(userId, function (results) {
+            console.log(results);
+            returnedId = results[0].user_id;
+            returnedAuth = results[0].auth_token;
+            currentProfilePicture = results[0].profile_photo_filename;
+            if (returnedId != null) {
+                //check authcode 
+                console.log("return id was valid " + returnedId);
+                if (returnedAuth != null) {
+                    //check auth tokens match
+                    if (returnedAuth == authToken) {
+                        try {
+                            //put into buffer to write it
+                            userfilename = results[0].user_id + results[0].username;
 
-        //put into buffer to write it
-        var buffer = new Buffer(req.body, 'binary')
-        filename = "UserProfile_test";
-        if (filetype == "image/jpeg") {
-            filename += ".jpeg"
-            console.log("creating jpeg");
-        } else if (filetype == "image/png") {
-            filename += ".png"
-            console.log("creating png");
-        }
+                            User.alterProfilePicture(returnedId, userfilename, function (results) {
+                                var buffer = new Buffer(req.body, 'binary')
+                                console.log("alter records");
+                                console.log(results);
+                                filename = userfilename;
+                                if (filetype == "image/jpeg") {
+                                    filename += ".jpeg"
+                                    console.log("creating jpeg");
+                                } else if (filetype == "image/png") {
+                                    filename += ".png"
+                                    console.log("creating png");
+                                }
 
-        fs.writeFile("./app/photos/" + filename, buffer, function (err, written) {
-            if (err) console.log(err);
+                                fs.writeFile("./app/photos/" + filename, buffer, function (err, written) {
+                                    if (err) console.log(err);
+                                    else {
+                                        console.log("Successfully written");
+                                        if (currentProfilePicture != null) {
+                                            res.status("200");
+                                            res.send("OK");
+                                        } else {
+                                            res.status("201");
+                                            res.send("Created");
+                                        }
+                                        console.log("should have stopped");
+                                    }
+                                });
+
+                            })
+
+                        } catch (err) {
+                            console.log(err.toString());
+                            res.status(400);
+                            res.send("Bad Request")
+                        }
+                    } else {
+                        res.status(403);
+                        res.send("Forbidden");
+                    }
+                }
+                else {
+                    res.status(401);
+                    res.send("Unauthorized");
+                }
+            }
             else {
-                console.log("Successfully written");
+                res.status(404);
+                res.send("Not Found");
             }
         });
 
-        //console.log(file);
-        res.send("Ran");
     } catch (err) {
         console.log(err.toString());
     }
