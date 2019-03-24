@@ -264,6 +264,14 @@ exports.update = async function (req, res) {
         res.status(400);
         res.send("Bad Request");
     }
+    else if (familyName != null && familyName == "") {
+        res.status(400);
+        res.send("Bad Request");
+    }
+    else if (password != null && !isNaN(password)) {
+        res.status(400);
+        res.send("Bad Request");
+    }
     else {
         //check if auth matched user
         creds = [
@@ -275,14 +283,19 @@ exports.update = async function (req, res) {
                 console.log(done);
                 console.log(done[0].auth_token);
                 if (done[0].auth_token != null) {
-                    try {
-                        User.alter(givenName, familyName, password, id, function () {
-                            //console.log(result);
-                            res.status(200);
-                            res.send("OK");
-                        })
-                    } catch (err) {
-                        console.log(err);
+                    if (done[0].auth_token != authToken.toString()) {
+                        res.status(403);
+                        res.send("Forbidden");
+                    } else {
+                        try {
+                            User.alter(givenName, familyName, password, id, function () {
+                                //console.log(result);
+                                res.status(200);
+                                res.send("OK");
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
                     }
                 }
                 else {
