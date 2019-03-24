@@ -90,7 +90,7 @@ exports.uploadPhoto = async function (req, res) {
                                         console.log("creating png");
                                     }
 
-                                    fs.writeFile("../app/photos/" + filename, buffer, function (err, written) {
+                                    fs.writeFile("/app/photos/" + filename, buffer, function (err, written) {
                                         if (err) {
                                             console.log(err);
                                             console.log("FAILED TO WRITE FILE")
