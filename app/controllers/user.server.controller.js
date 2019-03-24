@@ -60,6 +60,7 @@ exports.uploadPhoto = async function (req, res) {
         filetype = req.get("Content-Type");
         userId = req.params.id;
         console.log("user id is " + userId);
+        console.log("Path for server is : " + path);
         await User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
             console.log("does results == null: " + results == null);
