@@ -17,14 +17,14 @@ exports.list = function (req, res) {
     })
 };
 
-exports.getPhoto = function (req, res) {
+exports.getPhoto = async function (req, res) {
     console.log(req.get("X-Authorization"));
     //userProfilePicture = 'test.jpg'
     userId = req.params.id;
     console.log("User id is " + userId);
     try {
-        User.getOne(userId, function (result) {
-            if (results != null) {
+        await User.getOne(userId, function (result) {
+            if (result != null) {
                 console.log(result[0].profile_photo_filename);
                 if (result[0].profile_photo_filename != null) {
                     userProfilePicture = result[0].profile_photo_filename;
@@ -50,7 +50,7 @@ exports.getPhoto = function (req, res) {
     console.log("sent picture");
 }
 
-exports.uploadPhoto = function (req, res) {
+exports.uploadPhoto = async function (req, res) {
 
     // console.log(req.get("X-Authorization"));
     // console.log(req.get("Content-Type"));
@@ -61,7 +61,7 @@ exports.uploadPhoto = function (req, res) {
         filetype = req.get("Content-Type");
         userId = req.params.id;
         console.log("user id is " + userId);
-        User.getOne(userId, function (results) {
+        await User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
             console.log("does results == null: " + results == null);
             if (results[0] != null) {
