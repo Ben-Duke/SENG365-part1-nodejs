@@ -66,7 +66,7 @@ exports.uploadPhoto = async function (req, res) {
         await User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
             console.log("does results == null: " + results == null);
-            if (results[0] != null) {
+            if (results[0].user_id != null) {
                 returnedId = results[0].user_id;
                 returnedAuth = results[0].auth_token;
                 currentProfilePicture = results[0].profile_photo_filename;
@@ -110,7 +110,7 @@ exports.uploadPhoto = async function (req, res) {
                                                 res.status("201");
                                                 res.send("Created");
                                             }
-                                            console.log("should have stopped");
+
                                         }
                                     });
 
@@ -129,10 +129,7 @@ exports.uploadPhoto = async function (req, res) {
                     }
                     else {
                         res.status(403);
-
                         res.send("Forbidden");
-
-
                     }
                 }
                 else {
