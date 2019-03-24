@@ -122,14 +122,15 @@ exports.uploadPhoto = async function (req, res) {
                                 res.send("Bad Request")
                             }
                         } else {
-                            res.status(403);
+                            res.status(401);
                             //if yopu lose a test for the 401 things its this
-                            res.send("Forbidden");
+                            res.send("Unauthorized");
                         }
                     }
                     else {
-                        res.status(401);
-                        res.send("Unauthorized");
+                        res.status(403);
+
+                        res.send("Forbidden");
 
 
                     }
