@@ -64,7 +64,7 @@ exports.checkAuth = async function (authToken, done) {
     }
 }
 
-exports.getOne = function (userId, done) {
+exports.getOne = async function (userId, done) {
     console.log("calling getOne");
     console.log("looking");
     db.getPool().query('SELECT * FROM User WHERE user_id = ?', userId, function (err, rows) {

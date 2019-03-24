@@ -51,7 +51,7 @@ exports.getPhoto = async function (req, res) {
     console.log("get photo function ends");
 }
 
-exports.uploadPhoto = function (req, res) {
+exports.uploadPhoto = async function (req, res) {
 
     // console.log(req.get("X-Authorization"));
     // console.log(req.get("Content-Type"));
@@ -63,7 +63,7 @@ exports.uploadPhoto = function (req, res) {
         userId = req.params.id;
         console.log("user id is " + userId);
         console.log("Path for server is : " + __dirname);
-        User.getOne(userId, function (results) {
+        await User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
             console.log("does results == null: " + results[0] == null);
             console.log("results id == null: " + typeof (results[0]));
@@ -166,7 +166,7 @@ exports.deletePhoto = async function (req, res) {
         userId = req.params.id;
         console.log("user id is " + userId);
         console.log("Path for server is : " + __dirname);
-        await User.getOne(userId, function (results) {
+        User.getOne(userId, function (results) {
             if (results[0] != undefined) {
                 returnedUserId = results[0].user_id;
                 returnedUserAuth = results[0].auth_token;
