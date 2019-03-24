@@ -58,7 +58,7 @@ exports.uploadPhoto = function (req, res) {
         console.log("user id is " + userId);
         User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
-            if (results != null) {
+            if (results[0] != []) {
                 returnedId = results[0].user_id;
                 returnedAuth = results[0].auth_token;
                 currentProfilePicture = results[0].profile_photo_filename;
