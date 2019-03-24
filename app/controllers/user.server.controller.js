@@ -65,8 +65,10 @@ exports.uploadPhoto = async function (req, res) {
         console.log("Path for server is : " + __dirname);
         await User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
-            console.log("does results == null: " + results == null);
-            if (results[0].user_id != null) {
+            console.log("does results == null: " + results[0] == null);
+            console.log("results id == null: " + typeof (results[0]));
+            if (results[0] != undefined) {
+                console.log("Results should be valid");
                 returnedId = results[0].user_id;
                 returnedAuth = results[0].auth_token;
                 currentProfilePicture = results[0].profile_photo_filename;
@@ -136,6 +138,9 @@ exports.uploadPhoto = async function (req, res) {
                     res.status(404);
                     res.send("Not Found");
                 }
+            } else {
+                res.status(404);
+                res.send("Not Found");
             }
         });
 
