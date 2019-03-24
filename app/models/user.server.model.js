@@ -101,7 +101,7 @@ exports.addAuth = async function (values) {
     }
 }
 
-exports.alterProfilePicture = function (id, filename, done) {
+exports.alterProfilePicture = async function (id, filename, done) {
 
 
     let values = [filename, id];
