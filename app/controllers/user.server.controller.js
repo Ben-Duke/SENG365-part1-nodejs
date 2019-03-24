@@ -72,71 +72,79 @@ exports.uploadPhoto = async function (req, res) {
                 returnedId = results[0].user_id;
                 returnedAuth = results[0].auth_token;
                 currentProfilePicture = results[0].profile_photo_filename;
-                if (returnedId != null) {
-                    //check authcode 
-                    console.log("return id was valid " + returnedId);
-                    if (returnedAuth != null) {
-                        //check auth tokens match
-                        if (returnedAuth == authToken) {
-                            try {
-                                userFilename = results[0].user_id + results[0].username;
+                if (authToken != null) {
+                    if (returnedId != null) {
+                        //check authcode 
+                        console.log("return id was valid " + returnedId);
+                        if (returnedAuth != null) {
+                            //check auth tokens match
+                            if (returnedAuth == authToken) {
+                                try {
+                                    userFilename = results[0].user_id + results[0].username;
 
-                                //put into buffer to write it
-                                if (filetype.toString() == "image/jpeg") {
-                                    userFilename = userFilename + ".jpeg"
-                                    console.log("creating jpeg");
-                                } else if (filetype.toString() == "image/png") {
-                                    userFilename += ".png"
-                                    console.log("creating png");
-                                }
-
-
-                                User.alterProfilePicture(returnedId, userFilename, function (results) {
-                                    var buffer = new Buffer(req.body, 'binary')
-                                    console.log("alter records");
-                                    console.log(results);
+                                    //put into buffer to write it
+                                    if (filetype.toString() == "image/jpeg") {
+                                        userFilename = userFilename + ".jpeg"
+                                        console.log("creating jpeg");
+                                    } else if (filetype.toString() == "image/png") {
+                                        userFilename += ".png"
+                                        console.log("creating png");
+                                    }
 
 
+                                    User.alterProfilePicture(returnedId, userFilename, function (results) {
+                                        var buffer = new Buffer(req.body, 'binary')
+                                        console.log("alter records");
+                                        console.log(results);
 
-                                    fs.writeFile("./app/photos/" + userFilename, buffer, function (err, written) {
-                                        if (err) {
-                                            console.log(err);
-                                            console.log("FAILED TO WRITE FILE")
-                                        }
-                                        else {
-                                            console.log("Successfully written");
-                                            if (currentProfilePicture != null) {
-                                                res.status("200");
-                                                res.send("OK");
-                                            } else {
-                                                res.status("201");
-                                                res.send("Created");
+
+
+                                        fs.writeFile("./app/photos/" + userFilename, buffer, function (err, written) {
+                                            if (err) {
+                                                console.log(err);
+                                                console.log("FAILED TO WRITE FILE")
                                             }
+                                            else {
+                                                console.log("Successfully written");
+                                                if (currentProfilePicture != null) {
+                                                    res.status("200");
+                                                    res.send("OK");
+                                                } else {
+                                                    res.status("201");
+                                                    res.send("Created");
+                                                }
 
-                                        }
-                                    });
+                                            }
+                                        });
 
-                                })
+                                    })
 
-                            } catch (err) {
-                                console.log(err.toString());
-                                res.status(400);
-                                res.send("Bad Request")
+                                } catch (err) {
+                                    console.log(err.toString());
+                                    res.status(400);
+                                    res.send("Bad Request")
+                                }
+                            } else {
+                                res.status(401);
+                                //if yopu lose a test for the 401 things its this
+                                res.send("Unauthorized");
                             }
-                        } else {
-                            res.status(401);
-                            //if yopu lose a test for the 401 things its this
-                            res.send("Unauthorized");
+                        }
+                        else {
+                            res.status(403);
+                            res.send("Forbidden");
                         }
                     }
                     else {
-                        res.status(403);
-                        res.send("Forbidden");
+                        res.status(404);
+                        res.send("Not Found");
                     }
                 }
                 else {
-                    res.status(404);
-                    res.send("Not Found");
+
+                    res.status(401);
+                    res.send("Unauthorized");
+
                 }
             } else {
                 res.status(404);
