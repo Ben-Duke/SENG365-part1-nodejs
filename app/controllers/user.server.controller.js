@@ -24,6 +24,7 @@ exports.getPhoto = async function (req, res) {
     console.log("User id is " + userId);
     try {
         await User.getOne(userId, function (result) {
+            console.log("Just finsihed getOne in getPhoto");
             if (result[0] != null) {
                 console.log(result[0].profile_photo_filename);
                 if (result[0].profile_photo_filename != null) {
@@ -33,6 +34,7 @@ exports.getPhoto = async function (req, res) {
                 } else {
                     res.status(404);
                     res.send("Not Found");
+                    console.log("Not found when checking for photo");
                 }
             } else {
                 res.status(404);
@@ -46,7 +48,7 @@ exports.getPhoto = async function (req, res) {
     }
 
 
-    console.log("sent picture");
+    console.log("get photo function ends");
 }
 
 exports.uploadPhoto = async function (req, res) {
@@ -75,23 +77,26 @@ exports.uploadPhoto = async function (req, res) {
                         //check auth tokens match
                         if (returnedAuth == authToken) {
                             try {
-                                //put into buffer to write it
-                                userfilename = results[0].user_id + results[0].username;
+                                userFilename = results[0].user_id + results[0].username;
 
-                                User.alterProfilePicture(returnedId, userfilename, function (results) {
+                                //put into buffer to write it
+                                if (filetype.toString() == "image/jpeg") {
+                                    userFilename = userFilename + ".jpeg"
+                                    console.log("creating jpeg");
+                                } else if (filetype.toString() == "image/png") {
+                                    userFilename += ".png"
+                                    console.log("creating png");
+                                }
+
+
+                                User.alterProfilePicture(returnedId, userFilename, function (results) {
                                     var buffer = new Buffer(req.body, 'binary')
                                     console.log("alter records");
                                     console.log(results);
-                                    filename = userfilename;
-                                    if (filetype == "image/jpeg") {
-                                        filename += ".jpeg"
-                                        console.log("creating jpeg");
-                                    } else if (filetype == "image/png") {
-                                        filename += ".png"
-                                        console.log("creating png");
-                                    }
 
-                                    fs.writeFile("./app/photos/" + filename, buffer, function (err, written) {
+
+
+                                    fs.writeFile("./app/photos/" + userFilename, buffer, function (err, written) {
                                         if (err) {
                                             console.log(err);
                                             console.log("FAILED TO WRITE FILE")
@@ -138,7 +143,8 @@ exports.uploadPhoto = async function (req, res) {
 
     } catch (err) {
         console.log(err.toString());
-
+        res.status(404);
+        res.send("Not Found");
     }
 
 }
