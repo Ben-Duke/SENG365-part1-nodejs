@@ -104,7 +104,7 @@ exports.addAuth = async function (values) {
 exports.alterProfilePicture = function (id, filename, done) {
 
     let values = [filename, id];
-    db.getPool().query('UPDATE User SET profile_photo_filename = ? WHERE user_Id = ?', values, function (err, result) {
+    db.getPool().query('UPDATE User SET profile_photo_filename = ? WHERE user_id = ?', values, function (err, result) {
         if (err) return done(err);
         done(result);
     })
