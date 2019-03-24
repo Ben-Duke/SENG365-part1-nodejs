@@ -60,7 +60,7 @@ exports.uploadPhoto = async function (req, res) {
         filetype = req.get("Content-Type");
         userId = req.params.id;
         console.log("user id is " + userId);
-        console.log("Path for server is : " + path);
+        console.log("Path for server is : " + __dirname);
         await User.getOne(userId, function (results) {
             console.log("Get One results are " + results);
             console.log("does results == null: " + results == null);
@@ -91,7 +91,7 @@ exports.uploadPhoto = async function (req, res) {
                                         console.log("creating png");
                                     }
 
-                                    fs.writeFile("/app/photos/" + filename, buffer, function (err, written) {
+                                    fs.writeFile("./app/photos/" + filename, buffer, function (err, written) {
                                         if (err) {
                                             console.log(err);
                                             console.log("FAILED TO WRITE FILE")
