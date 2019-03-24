@@ -117,12 +117,14 @@ exports.uploadPhoto = async function (req, res) {
                             }
                         } else {
                             res.status(403);
+                            //if yopu lose a test for the 401 things its this
                             res.send("Forbidden");
                         }
                     }
                     else {
-                        res.status(401);
-                        res.send("Unauthorized");
+                        res.status(403);
+                        res.send("Forbidden");
+
 
                     }
                 }
@@ -135,6 +137,7 @@ exports.uploadPhoto = async function (req, res) {
 
     } catch (err) {
         console.log(err.toString());
+
     }
 
 }
