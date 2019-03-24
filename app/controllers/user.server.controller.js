@@ -24,17 +24,22 @@ exports.getPhoto = function (req, res) {
     console.log("User id is " + userId);
     try {
         User.getOne(userId, function (result) {
+            if (results != null) {
+                console.log(result[0].profile_photo_filename);
+                if (result[0].profile_photo_filename != null) {
+                    userProfilePicture = result[0].profile_photo_filename;
+                    console.log(userProfilePicture);
 
-            console.log(result[0].profile_photo_filename);
-            if (result[0].profile_photo_filename != null) {
-                userProfilePicture = result[0].profile_photo_filename;
-                console.log(userProfilePicture);
-
-                res.sendFile(path.join(__dirname, '../photos', userProfilePicture));
+                    res.sendFile(path.join(__dirname, '../photos', userProfilePicture));
+                } else {
+                    res.status(404);
+                    res.send("Not Found");
+                }
             } else {
                 res.status(404);
                 res.send("Not Found");
             }
+
         });
 
     } catch (err) {
