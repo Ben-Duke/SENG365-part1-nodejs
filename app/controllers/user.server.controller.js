@@ -160,6 +160,55 @@ exports.uploadPhoto = async function (req, res) {
 
 }
 
+exports.deletePhoto = async function (req, res) {
+    try {
+        authToken = req.get("X-Authorization");
+        userId = req.params.id;
+        console.log("user id is " + userId);
+        console.log("Path for server is : " + __dirname);
+        await User.getOne(userId, function (results) {
+            if (results[0] != undefined) {
+                returnedUserId = results[0].user_id;
+                returnedUserAuth = results[0].auth_token;
+                returnedUserPhoto = results[0].profile_photo_filename;
+                if (authToken != null) {
+                    if (authToken == returnedUserAuth) {
+                        if (returnedUserPhoto != null) {
+                            User.alterProfilePicture(returnedUserId, null, function (done) {
+                                console.log(done[0]);
+
+                                fs.unlink("./app/photos/" + returnedUserPhoto, (err) => {
+                                    if (err) throw err;
+                                    console.log("./app/photos/" + returnedUserPhoto + " was deleted");
+                                    res.status(200);
+                                    res.send("OK");
+                                });
+                            });
+                        } else {
+                            res.status(404);
+                            res.send("Not Found");
+                        }
+                    } else {
+                        res.status(403);
+                        res.send("Forbidden");
+                    }
+
+                } else {
+                    res.status(401);
+                    res.send("Unauthorized");
+                }
+
+            } else {
+                res.status(404);
+                res.send("Not Found");
+            }
+        });
+
+    } catch (err) {
+        console.log(err.toString());
+    }
+}
+
 exports.logOut = async function (req, res) {
     authToken = req.get("X-Authorization");
     console.log(authToken);
