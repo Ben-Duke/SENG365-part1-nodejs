@@ -85,7 +85,10 @@ exports.uploadPhoto = function (req, res) {
                                 }
 
                                 fs.writeFile("./app/photos/" + filename, buffer, function (err, written) {
-                                    if (err) console.log(err);
+                                    if (err) {
+                                        console.log(err);
+                                        console.log("FAILED TO WRITE FILE")
+                                    }
                                     else {
                                         console.log("Successfully written");
                                         if (currentProfilePicture != null) {
@@ -114,6 +117,7 @@ exports.uploadPhoto = function (req, res) {
                 else {
                     res.status(401);
                     res.send("Unauthorized");
+
                 }
             }
             else {
