@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+
+
+
 const allowCrossOriginRequests = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Authorization');
@@ -18,7 +21,7 @@ module.exports = function () {
     app.use(allowCrossOriginRequests);
     app.use(bodyParser.json());
     app.use(bodyParser.raw({ type: 'text/plain' }));  // for the /executeSql endpoint
-
+    app.use(bodyParser.raw({ type: '*/*' }));
     // ROUTES
     require('../app/routes/backdoor.routes')(app);
     require('../app/routes/user.server.routes')(app);

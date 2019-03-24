@@ -3,6 +3,12 @@ const bcrypt = require('bcrypt');
 const emailvalidator = require('email-validator');
 const saltRounds = 10;
 const randtoken = require('rand-token');
+const fs = require('fs');
+const bodyParser = require('body-parser');
+var path = require('path');
+
+const multer = require('multer');
+var upload = multer({ dest: './' })
 
 
 exports.list = function (req, res) {
@@ -10,6 +16,71 @@ exports.list = function (req, res) {
         res.json(result);
     })
 };
+
+exports.getPhoto = function (req, res) {
+    console.log(req.get("X-Authorization"));
+    //userProfilePicture = 'test.jpg'
+    userId = req.params.id;
+    console.log("User id is " + userId);
+    try {
+        User.getOne(userId, function (result) {
+
+            console.log(result[0].profile_photo_filename);
+            if (result[0].profile_photo_filename != null) {
+                userProfilePicture = result[0].profile_photo_filename;
+                console.log(userProfilePicture);
+
+                res.sendFile(path.join(__dirname, '../photos', userProfilePicture));
+            } else {
+                res.status(404);
+                res.send("Not Found");
+            }
+        });
+
+    } catch (err) {
+        console.log(err.toString());
+    }
+
+
+    console.log("sent picture");
+}
+
+exports.uploadPhoto = function (req, res) {
+
+    // console.log(req.get("X-Authorization"));
+    // console.log(req.get("Content-Type"));
+    // console.log("Body is ");
+    //rename with file name user_id_(user)+.jpeg or png
+    try {
+        authToken = req.get("X-Authorization");
+        filetype = req.get("Content-Type");
+        User.getOne(req.params.user_id)
+
+        //put into buffer to write it
+        var buffer = new Buffer(req.body, 'binary')
+        filename = "UserProfile_test";
+        if (filetype == "image/jpeg") {
+            filename += ".jpeg"
+            console.log("creating jpeg");
+        } else if (filetype == "image/png") {
+            filename += ".png"
+            console.log("creating png");
+        }
+
+        fs.writeFile("./app/photos/" + filename, buffer, function (err, written) {
+            if (err) console.log(err);
+            else {
+                console.log("Successfully written");
+            }
+        });
+
+        //console.log(file);
+        res.send("Ran");
+    } catch (err) {
+        console.log(err.toString());
+    }
+
+}
 
 exports.logOut = async function (req, res) {
     authToken = req.get("X-Authorization");
