@@ -282,7 +282,7 @@ exports.update = async function (req, res) {
 
                 console.log(done);
                 console.log(done[0].auth_token);
-                if (done[0].auth_token != null) {
+                if (authToken != null) {
                     if (done[0].auth_token != authToken.toString()) {
                         res.status(403);
                         res.send("Forbidden");
