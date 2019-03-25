@@ -8,4 +8,22 @@ exports.getCats = async function (done) {
         if (err) return done(err);
         done(rows);
     })
-};
+}
+exports.insertNewVenue = async function (values, done) {
+    console.log("calling into in venues");
+    console.log("length of passed values is" + values.length);
+
+    query = 'INSERT INTO Venue (venue_id, admin_id, category_id, venue_name, city, short_description, long_description, date_added, address, latitude, longitude) VALUES (?,?,?,?,?,?,?,?,?,?,?)';
+    console.log("calling Insert");
+    try {
+        const result = await db.getPool().query(query, values);
+        console.log("hi");
+        done(result);
+    }
+    catch (err) {
+        done(err.toString());
+
+    }
+}
+
+
