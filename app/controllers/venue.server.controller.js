@@ -14,27 +14,46 @@ exports.insert = async function (req, res) {
             if (result.user_auth != userid) {
                 //console.log(result);
                 //query = 'INSERT INTO Venue (`venue_id`, `admin_id`, `category_id`, `venue_name`, `city`, `short_description`, `long_description`, `date_added`, `address`, `latitude`, `longitude`) VALUES (?)';
+
                 values = [
                     null,
                     result[0].user_id,
-                    req.body.categoryId.toString(),
-                    req.body.venueName.toString(),
-                    req.body.city.toString(),
-                    req.body.shortDescription.toString(),
-                    req.body.longDescription.toString(),
+                    req.body.categoryId,
+                    req.body.venueName,
+                    req.body.city,
+                    req.body.shortDescription,
+                    req.body.longDescription,
                     "1990-09-09",
-                    req.body.address.toString(),
+                    req.body.address,
                     req.body.latitude,
-                    req.body.longitude,
-
+                    req.body.longitude
                 ]
                 // (null,1,1,"Santa's Winter Palace","North Pole","The chillest place on earth.","Especially good in the summer months.","1990-09-09","1 North Pole",-45,0)
                 for (i = 1; i < values.length; i++) {
-                    // console.log("value is for values[i] " + values[i]);
-                    // console.log("valid is " + valid);
+                    console.log("value is for values[i] " + values[i]);
+                    console.log("valid is " + valid);
                     if (values[i] == undefined) {
                         valid = "bad request";
                         console.log("valid is " + valid);
+                    }
+                    else {
+                        values[i] = values[i].toString();
+                    }
+                }
+
+                if (values[4] == null && values[4] == "") {
+                    valid = "bad request";
+                }
+
+                if (values[9] != undefined) {
+                    if (values[9] > 90) {
+                        valid = "bad request";
+                    }
+                }
+
+                if (values[10] != undefined) {
+                    if (values[10] < -180) {
+                        valid = "bad request";
                     }
                 }
 
@@ -43,12 +62,13 @@ exports.insert = async function (req, res) {
                         console.log("calling insert");
                         Venue.insertNewVenue(values, function (result) {
                             console.log(result);
+                            console.log(result.insertId);
                             console.log("added venue");
-                            if (result[0].insertID != undefined) {
+                            if (result != null) {
                                 res.status(201);
-                                res.json({ "venueId": result[0].venue_id });
+                                res.json({ "venueId": result.insertId });
                             } else {
-                                res.status(404);
+                                res.status(401);
                                 res.send("Unauthorized");
                             }
                         });
