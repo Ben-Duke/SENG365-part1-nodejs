@@ -12,7 +12,7 @@ module.exports = function (app) {
 
     app.route('/api/v1/users/:id/photo')
         .get(users.getPhoto)
-        //.delete(users.deletePhoto)
+        .delete(users.deletePhoto)
         .put(users.uploadPhoto);
 
     app.route('/api/v1/users/logout')
