@@ -96,9 +96,6 @@ exports.uploadPhoto = async function (req, res) {
                                         var buffer = new Buffer(req.body, 'binary')
                                         console.log("alter records");
                                         console.log(results);
-
-
-
                                         fs.writeFile("./app/photos/" + userFilename, buffer, function (err, written) {
                                             if (err) {
                                                 console.log(err);
