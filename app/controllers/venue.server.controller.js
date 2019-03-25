@@ -23,7 +23,7 @@ exports.insert = async function (req, res) {
                     req.body.city,
                     req.body.shortDescription,
                     req.body.longDescription,
-                    "1990-09-09",
+                    new Date().toISOString(),
                     req.body.address,
                     req.body.latitude,
                     req.body.longitude
