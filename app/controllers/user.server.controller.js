@@ -72,7 +72,7 @@ exports.uploadPhoto = async function (req, res) {
                 returnedId = results[0].user_id;
                 returnedAuth = results[0].auth_token;
                 currentProfilePicture = results[0].profile_photo_filename;
-                if (authToken != null) {
+                if (authToken != null || authToken != undefined) {
                     if (returnedId != null) {
                         //check authcode 
                         console.log("return id was valid " + returnedId);
