@@ -44,7 +44,7 @@ exports.insert = async function (req, res) {
                         Venue.insertNewVenue(values, function (result) {
                             console.log(result);
                             console.log("added venue");
-                            if (result.length > 1) {
+                            if (result[0].insertID != undefined) {
                                 res.status(201);
                                 res.json({ "venueId": result[0].venue_id });
                             } else {
